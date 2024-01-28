@@ -10,7 +10,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Service
 public class NewsByDate {
@@ -35,6 +34,13 @@ public class NewsByDate {
 
         public JSONObject getNewDate(String typeNews, String from, String to) throws IOException {
             String url= apiUrl + "q=" + typeNews + "&from=" + from + "&to=" + to + "&sortBy=popularity&apiKey=" + apiKey;
+
+            String response = peticionUrl(url);
+            return (JSONObject) JSONValue.parse(response);
+        }
+
+        public JSONObject getNewDomain(String domains) throws IOException {
+            String url= apiUrl + "domains=" + domains + "&apiKey=" + apiKey;
 
             String response = peticionUrl(url);
             return (JSONObject) JSONValue.parse(response);
