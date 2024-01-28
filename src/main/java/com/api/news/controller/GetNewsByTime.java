@@ -42,7 +42,13 @@ public class GetNewsByTime {
         JSONObject jsonResponse = newsByDate.getNewDate(typeNew, from, to);
         String totalResults = jsonResponse.get("totalResults").toString();
 
-        serviceDataBase.saveData("Range date news", typeNew, totalResults);
+        boolean sendInfo = serviceDataBase.saveData("Range date news", typeNew, totalResults);
+        if (sendInfo) {
+            jsonResponse.put("dataSaved", true);
+        } else {
+            jsonResponse.put("dataSaved", false);
+        }
+
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 

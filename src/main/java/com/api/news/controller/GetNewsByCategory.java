@@ -35,7 +35,13 @@ public class GetNewsByCategory {
         JSONObject jsonResponse = newsByDate.getNewCategory(category);
         String totalResults = jsonResponse.get("totalResults").toString();
 
-        serviceDataBase.saveData("Category news", category, totalResults);
+        boolean sendInfo = serviceDataBase.saveData("Category news", category, totalResults);
+        if (sendInfo) {
+            jsonResponse.put("dataSaved", true);
+        } else {
+            jsonResponse.put("dataSaved", false);
+        }
+
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 

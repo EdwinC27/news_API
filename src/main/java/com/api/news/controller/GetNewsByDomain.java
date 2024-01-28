@@ -38,7 +38,13 @@ public class GetNewsByDomain {
         JSONObject jsonResponse = newsByDate.getNewDomain(domain);
         String totalResults = jsonResponse.get("totalResults").toString();
 
-        serviceDataBase.saveData("Domains news", domain, totalResults);
+        boolean sendInfo = serviceDataBase.saveData("Domains news", domain, totalResults);
+        if (sendInfo) {
+            jsonResponse.put("dataSaved", true);
+        } else {
+            jsonResponse.put("dataSaved", false);
+        }
+
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 

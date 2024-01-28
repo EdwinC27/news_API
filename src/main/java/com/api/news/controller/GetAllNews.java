@@ -39,7 +39,13 @@ public class GetAllNews {
         JSONObject jsonResponse = newsByDate.getNewToday(typeNew);
         String totalResults = jsonResponse.get("totalResults").toString();
 
-        serviceDataBase.saveData("Today news", typeNew, totalResults);
+        boolean sendInfo = serviceDataBase.saveData("Today news", typeNew, totalResults);
+        if (sendInfo) {
+            jsonResponse.put("dataSaved", true);
+        } else {
+            jsonResponse.put("dataSaved", false);
+        }
+
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 
