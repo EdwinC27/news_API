@@ -33,6 +33,13 @@ public class NewsByDate {
             return (JSONObject) JSONValue.parse(response);
         }
 
+        public JSONObject getNewDate(String typeNews, String from, String to) throws IOException {
+            String url= apiUrl + "q=" + typeNews + "&from=" + from + "&to=" + to + "&sortBy=popularity&apiKey=" + apiKey;
+
+            String response = peticionUrl(url);
+            return (JSONObject) JSONValue.parse(response);
+        }
+
         private String peticionUrl(String url) throws IOException  {
             String response = webClient.get()
                     .uri(url)
