@@ -4,8 +4,6 @@ import com.api.news.configuration.CheckInternetConnection;
 import com.api.news.model.constants.EndPoints;
 import com.api.news.service.NewsBy;
 import net.minidev.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(EndPoints.BASE_URL)
-public class GetNewsByDomain {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GetNewsByDomain.class);
+public class GetNewsByCategory {
 
     @Autowired
     NewsBy newsByDate;
@@ -25,13 +22,13 @@ public class GetNewsByDomain {
     @Autowired
     CheckInternetConnection checkInternetConnection;
 
-    @GetMapping(EndPoints.NEWS_DOMAIN)
-    public ResponseEntity<JSONObject> getAllNews(@RequestParam(value = "domains", required = true) String domain) throws Exception {
-        //  Possible options: bbc.co.uk, techcrunch.com, engadget.com
+    @GetMapping(EndPoints.NEWS_CATEGORY)
+    public ResponseEntity<JSONObject> getNewsByCategory(@RequestParam(value = "category", required = true) String category) throws Exception {
+        //  Possible options: business, entertainment, general, health, science, sports, technology
 
         boolean isConnected = checkInternetConnection.connection();
 
-        JSONObject jsonResponse = newsByDate.getNewDomain(domain);
+        JSONObject jsonResponse = newsByDate.getNewCategory(category);
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 

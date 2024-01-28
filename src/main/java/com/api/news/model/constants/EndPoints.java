@@ -5,4 +5,5 @@ public class EndPoints {
     public static final String NEWS_TODAY = "news_today";
     public static final String NEWS_DATE = "news_date";
     public static final String NEWS_DOMAIN = "news_domain";
+    public static final String NEWS_CATEGORY = "news_category";
 }

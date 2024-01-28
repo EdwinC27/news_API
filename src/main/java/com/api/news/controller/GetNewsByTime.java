@@ -2,7 +2,7 @@ package com.api.news.controller;
 
 import com.api.news.configuration.CheckInternetConnection;
 import com.api.news.model.constants.EndPoints;
-import com.api.news.service.NewsByDate;
+import com.api.news.service.NewsBy;
 import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +20,19 @@ public class GetNewsByTime {
     private static final Logger LOGGER = LoggerFactory.getLogger(GetNewsByTime.class);
 
     @Autowired
-    NewsByDate newsByDate;
+    NewsBy newsByDate;
 
     @Autowired
     CheckInternetConnection checkInternetConnection;
 
     @GetMapping(EndPoints.NEWS_DATE)
     public ResponseEntity<JSONObject> getAllNews(
-            @RequestParam(value = "type", required = true) String typeNew,
-            @RequestParam(value = "from", required = true) String from,
-            @RequestParam(value = "to", required = true) String to) throws Exception {
+                @RequestParam(value = "type", required = true) String typeNew,
+                @RequestParam(value = "from", required = true) String from,
+                @RequestParam(value = "to", required = true) String to) throws Exception {
+
+        //  Possible options: bitcoin, apple
+
         boolean isConnected = checkInternetConnection.connection();
 
         JSONObject jsonResponse = newsByDate.getNewDate(typeNew, from, to);
