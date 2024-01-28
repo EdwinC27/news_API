@@ -2,8 +2,6 @@ package com.api.news.service;
 
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,39 +18,36 @@ public class NewsByDate {
     @Value("${authUrlNews}")
     private String apiUrl;
 
-        WebClient webClient = WebClient.create();
+    WebClient webClient = WebClient.create();
 
-        private static final Logger LOGGER = LoggerFactory.getLogger(NewsByDate.class);
+    public JSONObject getNewToday(String typeNews) throws IOException {
+        LocalDate date = LocalDate.now();
+        String url= apiUrl + "q=" + typeNews + "&from=" + date + "&to=" + date + "&sortBy=popularity&apiKey=" + apiKey;
 
-        public JSONObject getNewToday(String typeNews) throws IOException {
-            LocalDate date = LocalDate.now();
-            String url= apiUrl + "q=" + typeNews + "&from=" + date + "&to=" + date + "&sortBy=popularity&apiKey=" + apiKey;
+        String response = peticionUrl(url);
+        return (JSONObject) JSONValue.parse(response);
+    }
 
-            String response = peticionUrl(url);
-            return (JSONObject) JSONValue.parse(response);
-        }
+    public JSONObject getNewDate(String typeNews, String from, String to) throws IOException {
+        String url= apiUrl + "q=" + typeNews + "&from=" + from + "&to=" + to + "&sortBy=popularity&apiKey=" + apiKey;
 
-        public JSONObject getNewDate(String typeNews, String from, String to) throws IOException {
-            String url= apiUrl + "q=" + typeNews + "&from=" + from + "&to=" + to + "&sortBy=popularity&apiKey=" + apiKey;
+        String response = peticionUrl(url);
+        return (JSONObject) JSONValue.parse(response);
+    }
+     public JSONObject getNewDomain(String domains) throws IOException {
+         String url= apiUrl + "domains=" + domains + "&apiKey=" + apiKey;
 
-            String response = peticionUrl(url);
-            return (JSONObject) JSONValue.parse(response);
-        }
+         String response = peticionUrl(url);
+         return (JSONObject) JSONValue.parse(response);
+     }
 
-        public JSONObject getNewDomain(String domains) throws IOException {
-            String url= apiUrl + "domains=" + domains + "&apiKey=" + apiKey;
+     private String peticionUrl(String url) throws IOException  {
+        String response = webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-            String response = peticionUrl(url);
-            return (JSONObject) JSONValue.parse(response);
-        }
-
-        private String peticionUrl(String url) throws IOException  {
-            String response = webClient.get()
-                    .uri(url)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
-
-            return response;
-        }
+        return response;
+    }
 }
