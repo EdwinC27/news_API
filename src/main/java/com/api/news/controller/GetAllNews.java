@@ -1,5 +1,6 @@
 package com.api.news.controller;
 
+import com.api.news.configuration.CheckInternetConnection;
 import com.api.news.model.constants.EndPoints;
 import com.api.news.service.NewsByDate;
 
@@ -24,8 +25,13 @@ public class GetAllNews {
     @Autowired
     NewsByDate newsByDate;
 
+    @Autowired
+    CheckInternetConnection checkInternetConnection;
+
     @GetMapping(EndPoints.NEWS_TODAY)
-    public ResponseEntity<JSONObject> getAllNews(@RequestParam(value = "type", required = true) String typeNew) throws IOException {
+    public ResponseEntity<JSONObject> getAllNews(@RequestParam(value = "type", required = true) String typeNew) throws Exception {
+        boolean isConnected = checkInternetConnection.connection();
+
         JSONObject jsonResponse = newsByDate.getNewToday(typeNew);
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
