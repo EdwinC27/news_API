@@ -3,6 +3,7 @@ package com.api.news.controller;
 import com.api.news.configuration.CheckInternetConnection;
 import com.api.news.model.constants.EndPoints;
 import com.api.news.service.NewsBy;
+import com.api.news.service.ServiceDataBase;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ public class GetNewsByCategory {
     @Autowired
     CheckInternetConnection checkInternetConnection;
 
+    @Autowired
+    ServiceDataBase serviceDataBase;
+
     @GetMapping(EndPoints.NEWS_CATEGORY)
     public ResponseEntity<JSONObject> getNewsByCategory(@RequestParam(value = "category", required = true) String category) throws Exception {
         //  Possible options: business, entertainment, general, health, science, sports, technology
@@ -29,6 +33,9 @@ public class GetNewsByCategory {
         boolean isConnected = checkInternetConnection.connection();
 
         JSONObject jsonResponse = newsByDate.getNewCategory(category);
+        String totalResults = jsonResponse.get("totalResults").toString();
+
+        serviceDataBase.saveData("Category news", category, totalResults);
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 

@@ -4,6 +4,7 @@ import com.api.news.configuration.CheckInternetConnection;
 import com.api.news.model.constants.EndPoints;
 import com.api.news.service.NewsBy;
 
+import com.api.news.service.ServiceDataBase;
 import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,9 @@ public class GetAllNews {
     @Autowired
     CheckInternetConnection checkInternetConnection;
 
+    @Autowired
+    ServiceDataBase serviceDataBase;
+
     @GetMapping(EndPoints.NEWS_TODAY)
     public ResponseEntity<JSONObject> getAllNews(@RequestParam(value = "type", required = true) String typeNew) throws Exception {
         //  Possible options: bitcoin, apple
@@ -33,6 +37,9 @@ public class GetAllNews {
         boolean isConnected = checkInternetConnection.connection();
 
         JSONObject jsonResponse = newsByDate.getNewToday(typeNew);
+        String totalResults = jsonResponse.get("totalResults").toString();
+
+        serviceDataBase.saveData("Today news", typeNew, totalResults);
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 

@@ -3,6 +3,7 @@ package com.api.news.controller;
 import com.api.news.configuration.CheckInternetConnection;
 import com.api.news.model.constants.EndPoints;
 import com.api.news.service.NewsBy;
+import com.api.news.service.ServiceDataBase;
 import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class GetNewsByDomain {
     @Autowired
     CheckInternetConnection checkInternetConnection;
 
+    @Autowired
+    ServiceDataBase serviceDataBase;
+
     @GetMapping(EndPoints.NEWS_DOMAIN)
     public ResponseEntity<JSONObject> getAllNews(@RequestParam(value = "domains", required = true) String domain) throws Exception {
         //  Possible options: bbc.co.uk, techcrunch.com, engadget.com
@@ -32,6 +36,9 @@ public class GetNewsByDomain {
         boolean isConnected = checkInternetConnection.connection();
 
         JSONObject jsonResponse = newsByDate.getNewDomain(domain);
+        String totalResults = jsonResponse.get("totalResults").toString();
+
+        serviceDataBase.saveData("Domains news", domain, totalResults);
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 
